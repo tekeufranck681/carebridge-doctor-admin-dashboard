@@ -1,16 +1,15 @@
 import React, { useState, useEffect, memo, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Sidebar } from './Sidebar';
 import { Header } from './Header';
 
 export const Layout = memo(({
   children,
-  activeTab,
-  onTabChange
+  activeTab
 }) => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-
-  console.log('Layout render - activeTab:', activeTab);
+  const navigate = useNavigate();
 
   const handleSidebarToggle = useCallback(() => {
     setSidebarCollapsed(prev => !prev);
@@ -23,9 +22,9 @@ export const Layout = memo(({
   }, [isMobile]);
 
   const handleTabChange = useCallback((newTab) => {
-    console.log('Layout handleTabChange called with:', newTab);
-    onTabChange(newTab);
-  }, [onTabChange]);
+    const basePath = window.location.pathname.includes('/admin') ? '/admin' : '/doctor';
+    navigate(`${basePath}/${newTab}`);
+  }, [navigate]);
 
   useEffect(() => {
     const checkMobile = () => {
